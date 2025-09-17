@@ -1,0 +1,21 @@
+{
+    "name": "diego/gestor_de_finanzas",
+    "description": "Gestor de finanzas personal",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "MVC\\" : "./",
+            "Controllers\\" : "./controllers",
+            "Models\\" : "./models",
+            "Classes\\" : "./classes"
+        }
+    },
+    "authors": [
+        {
+            "name": "Diego Torres Robles"
+        }
+    ],
+    "require": {
+        "phpmailer/phpmailer": "*"
+    }
+}

@@ -1,0 +1,51 @@
+// Tipografia
+$font: 'Montserrat', sans-serif;
+
+// Colores
+$color-1: #0726D9;
+$color-2: #031240;
+$color-3: #1760BF;
+$color-4: #3D9DF2;
+$color-5: #52C5F2;
+
+$blanco: #FFF;
+$negro: #000;
+$gris: #161616;
+$success-color: #59BF26;
+$warning-color: #F4B400;
+$danger-color: #C52C26;
+
+$shadow-color: #ededed;
+
+$root-vars: (
+    spacing: 1rem,
+    radius: 8px,
+    font: $font,
+    transition: 0.3s
+);
+
+$themes: (
+    light: (
+        // Alertas
+        alert-success-bg: lighten($success-color, 50%),
+        alert-warning-bg: lighten($warning-color, 50%),
+        alert-danger-bg: lighten($danger-color, 50%),
+
+        success-color: $success-color,
+        warning-color: $warning-color,
+        danger-color: $danger-color,
+        danger-color-op: lighten($danger-color, 15%),
+        shadow-color: $shadow-color,
+        border-color: $gris,
+        bg: $blanco,
+        text-color: $color-2
+    ),
+    dark: (
+        danger-color: $danger-color,
+        danger-color-op: lighten($danger-color, 15%),
+        shadow-color: invert($shadow-color),
+        border-color: invert($gris),
+        bg: $gris,
+        text-color: #ededed
+    )
+);

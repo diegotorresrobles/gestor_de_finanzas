@@ -1,0 +1,84 @@
+@use './base/variables' as v;
+@use 'base/mixins' as m;
+
+:root {
+    @include m.css-vars(v.$root-vars);
+}
+
+html {
+    font-size: 62.5%;
+    box-sizing: border-box;
+}
+
+*,
+::after,
+::before {
+    box-sizing: inherit;
+}
+
+body {
+    position: relative;
+    background-color: var(--bg);
+    font-family: var(--font);
+    font-size: 1.6rem;
+    color: var(--text-color);
+    min-height: 100vh;
+
+    &.app {
+        @include m.mq(1000px) {
+            padding-left: 25rem;
+        }
+    }
+}
+
+body:has(.overlay) {
+    overflow: hidden;
+}
+
+// /* Estilo para la barra de desplazamiento en general */
+// ::-webkit-scrollbar {
+//     width: 8px; /* Ancho de la barra vertical */
+//     height: 8px; /* Alto de la barra horizontal (si la hay) */
+// }
+// /* Fondo de la barra (track) */
+// ::-webkit-scrollbar-track {
+//     background: var(--bg); 
+//     border-radius: 0 0 .5rem 0;
+// }
+// /* Parte que se mueve (el thumb) */
+// ::-webkit-scrollbar-thumb {
+//     background: var(--text-color); 
+//     border-radius: 5px;
+// }
+// /* Hover en el thumb */
+// ::-webkit-scrollbar-thumb:hover {
+//     background: #555;
+// }
+
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+a {
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+button,
+div,
+a {
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+.contenedor {
+    width: 95%;
+    max-width: 120rem;
+    margin: 0 auto;
+    overflow-y: auto;
+}
+
+.ocultar {
+    display: none;
+}

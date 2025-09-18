@@ -26,26 +26,7 @@ $root-vars: (
 
 $themes: (
     light: (
-        // Alertas
-        alert-success-bg: lighten($success-color, 50%),
-        alert-warning-bg: lighten($warning-color, 50%),
-        alert-danger-bg: lighten($danger-color, 50%),
-
-        success-color: $success-color,
-        warning-color: $warning-color,
-        danger-color: $danger-color,
-        danger-color-op: lighten($danger-color, 15%),
-        shadow-color: $shadow-color,
-        border-color: $gris,
-        bg: $blanco,
-        text-color: $color-2
     ),
     dark: (
-        danger-color: $danger-color,
-        danger-color-op: lighten($danger-color, 15%),
-        shadow-color: invert($shadow-color),
-        border-color: invert($gris),
-        bg: $gris,
-        text-color: #ededed
     )
 );

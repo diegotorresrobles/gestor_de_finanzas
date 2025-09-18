@@ -35,25 +35,25 @@ body:has(.overlay) {
     overflow: hidden;
 }
 
-// /* Estilo para la barra de desplazamiento en general */
-// ::-webkit-scrollbar {
-//     width: 8px; /* Ancho de la barra vertical */
-//     height: 8px; /* Alto de la barra horizontal (si la hay) */
-// }
-// /* Fondo de la barra (track) */
-// ::-webkit-scrollbar-track {
-//     background: var(--bg); 
-//     border-radius: 0 0 .5rem 0;
-// }
-// /* Parte que se mueve (el thumb) */
-// ::-webkit-scrollbar-thumb {
-//     background: var(--text-color); 
-//     border-radius: 5px;
-// }
-// /* Hover en el thumb */
-// ::-webkit-scrollbar-thumb:hover {
-//     background: #555;
-// }
+/* Estilo para la barra de desplazamiento en general */
+::-webkit-scrollbar {
+    width: 8px; /* Ancho de la barra vertical */
+    height: 8px; /* Alto de la barra horizontal (si la hay) */
+}
+/* Fondo de la barra (track) */
+::-webkit-scrollbar-track {
+    background: var(--bg); 
+    border-radius: 0 0 .5rem 0;
+}
+/* Parte que se mueve (el thumb) */
+::-webkit-scrollbar-thumb {
+    background: var(--text-color); 
+    border-radius: 5px;
+}
+/* Hover en el thumb */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
 
 
 img {

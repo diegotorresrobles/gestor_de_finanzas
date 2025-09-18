@@ -1,0 +1,26 @@
+.btn {
+    border: 0;
+    padding: 1rem 2rem;
+    background-color: color-mix(in srgb, var(--btn-bg) 30%, transparent);
+    border-radius: var(--radius);
+    border: 1px solid var(--btn-border);
+    color: var(--btn-text);
+    cursor: pointer;
+    transition: transform var(--transition) ease-in-out;
+
+    &:hover {
+        transform: translateY(-.6rem);
+    }
+    &--success {
+        --btn-bg: var(--success-color);
+        --btn-border: var(--success-color);
+    }
+    &--warning {
+        --btn-bg: var(--warning-color);
+        --btn-border: var(--warning-color);
+    }
+    &--danger {
+        --btn-bg: var(--danger-color);
+        --btn-border: var(--danger-color);
+    }
+}

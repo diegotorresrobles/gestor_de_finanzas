@@ -1,0 +1,38 @@
+.alerta {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: color-mix(in srgb, var(--alert-bg) 10%, transparent);
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 1rem;
+        opacity: .8;
+        background-color: var(--alert-bg);
+    }
+    &--baner {
+        height: 3rem;
+        padding-left: 2rem;
+    }
+    &--toast {
+        position: absolute;
+        top: 1rem;
+        right: 0;
+        height: 5rem;
+        padding-left: calc(var(--spacing) + 2rem);
+        padding-right: calc(var(--spacing) + 1rem);
+    }
+    &--success {
+        --alert-bg: var(--success-color);
+    }
+    &--warning {
+        --alert-bg: var(--warning-color);
+    }
+    &--danger {
+        --alert-bg: var(--danger-color);
+    }
+}

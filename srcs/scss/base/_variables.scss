@@ -11,9 +11,9 @@ $color-5: #52C5F2;
 $blanco: #FFF;
 $negro: #000;
 $gris: #161616;
-$success-color: #59BF26;
-$warning-color: #F4B400;
-$danger-color: #C52C26;
+$success-color: rgb(89, 191, 38);
+$warning-color: rgb(244, 180, 0);
+$danger-color: rgb(197, 44, 38);
 
 $shadow-color: #ededed;
 
@@ -21,12 +21,30 @@ $root-vars: (
     spacing: 1rem,
     radius: 8px,
     font: $font,
-    transition: 0.3s
+    transition: 0.3s,
+    // Colores
+    negro: $negro,
+    blanco: $blanco,
+    success-color: $success-color,
+    warning-color: $warning-color,
+    danger-color: $danger-color
 );
 
 $themes: (
     light: (
+        text-color: $color-2,
+        bg: $blanco,
+        border-pri: $color-2,
+        border-sec: $color-5,
+        btn-bg: $color-5,
+        btn-border: $color-5
     ),
     dark: (
+        text-color: #ebebeb,
+        bg: $gris,
+        border-pri: #ebebeb,
+        border-sec: $color-5,
+        btn-bg: $color-5,
+        btn-border: $color-5
     )
 );

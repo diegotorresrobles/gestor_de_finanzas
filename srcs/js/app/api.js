@@ -1,6 +1,6 @@
-export function apiGet(url) {
+export async function apiGet(url) {
     try {
-        const req = fetch(url, {
+        const req = await fetch(url, {
             method: 'GET'
         });
         if (!req.ok) {

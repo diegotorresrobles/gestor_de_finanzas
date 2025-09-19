@@ -23,7 +23,7 @@ class Router {
             'samesite' => 'Strict'
         ]);
         session_start();
-        $auth = $_SESSION['login'] ?? false;
+        $auth = $_SESSION['auth'] ?? false;
         $urlActual = $_SERVER['PATH_INFO'] ?? '/';
         $metodo = $_SERVER['REQUEST_METHOD'];
         $urlsProtegidas = ['/'];

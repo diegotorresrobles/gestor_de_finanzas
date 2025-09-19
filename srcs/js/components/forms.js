@@ -10,7 +10,14 @@ export async function enviarForm(e, url, data) {
     alertas = document.querySelectorAll('.alerta');
     if(alertas.length > 0) return;
     const res = await apiPost(url, data);
-    console.log(res);
+    if(res.status === 'error') {
+        const errores = res.data.alertas.error;
+        Object.entries(errores).forEach(([key, value]) => {
+            const input = form.querySelector(`.form__input[name='${key}']`);
+            crearAlerta(input.parentElement, 'danger', 'baner', value);
+        });
+    }
+    return res;
 }
 
 function validarInputs() {
@@ -29,12 +36,12 @@ function validarInputs() {
             }
         }
         if(form.classList.contains('form--logup')) {
-            validarLogup(id, value, alerta);
+            validarLogup(id, value, alerta, input);
         }
     });
 }
 
-function validarLogup(id, value, alerta) {
+function validarLogup(id, value, alerta, input) {
     if (value !== '' && id === 'email') {
         const email = valdiarEmail(value);
         if(!email) {

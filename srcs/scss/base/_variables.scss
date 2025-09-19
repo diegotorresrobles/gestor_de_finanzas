@@ -37,7 +37,8 @@ $themes: (
         border-pri: $color-2,
         border-sec: $color-5,
         btn-bg: $color-5,
-        btn-border: $color-5
+        btn-border: $color-5,
+        modal-bg: #ebebeb
     ),
     dark: (
         text-color: #ebebeb,
@@ -45,6 +46,7 @@ $themes: (
         border-pri: #ebebeb,
         border-sec: $color-5,
         btn-bg: $color-5,
-        btn-border: $color-5
+        btn-border: $color-5,
+        modal-bg: #3b3b3b
     )
 );

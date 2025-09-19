@@ -1,0 +1,32 @@
+.modal {
+    width: 45rem;
+    background-color: var(--modal-bg);
+    padding: 2rem;
+    border-radius: var(--radius);
+    text-align: center;
+
+    &__icon {
+
+        .icon {
+            height: 10rem;
+            width: 10em;
+        }
+        &--success {
+            .icon {
+                color: var(--success-color);
+            }
+        }
+        &--danger {
+            .icon {
+                color: var(--danger-color);
+            }
+        }
+    }
+    &__text {
+        font-size: 1.8rem;
+    }
+    &__action {
+        margin-top: 1rem;
+        width: max-content;
+    }
+}

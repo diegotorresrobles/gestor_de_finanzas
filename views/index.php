@@ -1,1 +1,0 @@
-<?php prec($_SESSION) ?>

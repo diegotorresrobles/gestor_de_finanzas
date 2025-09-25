@@ -7,12 +7,12 @@ class Email {
     public static function enviarEmailVerificacion($data) {
         $phpmailer = new PHPMailer();
         $phpmailer->isSMTP(); // Credenciales  del host
-        $phpmailer->Host = 'sandbox.smtp.mailtrap.io';
+        $phpmailer->Host = $_ENV['MAIL_HOST'];
         $phpmailer->SMTPAuth = true;
-        $phpmailer->Port = 2525;
-        $phpmailer->Username = 'dce624e4a90893';
-        $phpmailer->Password = '65db5899cf6233';
-        $phpmailer->setFrom('accounts@gestordefinanzas.mx', 'GF S.A. de C.V.'); // De
+        $phpmailer->Port = $_ENV['MAIL_PORT'];
+        $phpmailer->Username = $_ENV['MAIL_USER'];
+        $phpmailer->Password = $_ENV['MAIL_PSWD'];
+        $phpmailer->setFrom($_ENV['MAIL_FROM'], 'Gestor de Finanzas by D.T.R.'); // De
         $phpmailer->addAddress($data->email, $data->nombre); // Para
         
         $phpmailer->CharSet = "UTF-8";
@@ -28,7 +28,7 @@ class Email {
                 <style>
                     /* Estilos generales del cuerpo del email */
                     body {
-                        margin: 0;
+                        margin: 20px 0;
                         padding: 0;
                         font-family: Arial, sans-serif;
                         background-color: #f4f4f4;

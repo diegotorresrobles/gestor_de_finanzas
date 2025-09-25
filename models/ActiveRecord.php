@@ -46,7 +46,7 @@ class ActiveRecord {
         return $resultado;
     }
     public function eliminar($id) {
-        $query = "DELETE FROM " . static::$tabla . " WHERE id = '${id}'";
+        $query = "DELETE FROM " . static::$tabla . " WHERE id = '{$id}'";
 
         $resultado = self::$db->query($query);
         return $resultado;

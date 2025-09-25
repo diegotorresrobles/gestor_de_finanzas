@@ -38,7 +38,9 @@ $themes: (
         border-sec: $color-5,
         btn-bg: $color-5,
         btn-border: $color-5,
-        modal-bg: #ebebeb
+        modal-bg: #ebebeb,
+        link-color-hover: $color-5,
+        section-bg: #ececec
     ),
     dark: (
         text-color: #ebebeb,
@@ -47,6 +49,8 @@ $themes: (
         border-sec: $color-5,
         btn-bg: $color-5,
         btn-border: $color-5,
-        modal-bg: #3b3b3b
+        modal-bg: #3b3b3b,
+        link-color-hover: $color-5,
+        section-bg: #3c3c3c
     )
 );

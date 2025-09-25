@@ -15,7 +15,8 @@
         background-color: var(--alert-bg);
     }
     &--baner {
-        height: 3rem;
+        min-height: 3rem;
+        padding: .3rem 0;
         padding-left: 2rem;
     }
     &--toast {

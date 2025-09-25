@@ -6,8 +6,8 @@ let alertas = null;
 
 export async function enviarForm(e, url, data) {
     e.preventDefault();
-    validarInputs();
-    alertas = document.querySelectorAll('.alerta');
+    validarInputs(data);
+    alertas = e.target.querySelectorAll('.alerta');
     if(alertas.length > 0) return;
     const res = await apiPost(url, data);
     if(res.status === 'error') {
@@ -20,7 +20,7 @@ export async function enviarForm(e, url, data) {
     return res;
 }
 
-function validarInputs() {
+function validarInputs(form) {
     const inputs = form.querySelectorAll('.form__input');
     inputs.forEach(input => {
         

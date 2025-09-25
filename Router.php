@@ -26,9 +26,12 @@ class Router {
         $auth = $_SESSION['auth'] ?? false;
         $urlActual = $_SERVER['PATH_INFO'] ?? '/';
         $metodo = $_SERVER['REQUEST_METHOD'];
-        $urlsProtegidas = ['/'];
+        $urlsProtegidas = ['/', '/api/cuentas', '/api/movimientos'];
         if(in_array($urlActual, $urlsProtegidas) && !$auth) {
             header('Location: /login');
+        }
+        if(!in_array($urlActual, $urlsProtegidas) && $auth) {
+            header('Location: /');
         }
         if($metodo === 'GET') {
             $fn = $this->rutasGET[$urlActual] ?? null;

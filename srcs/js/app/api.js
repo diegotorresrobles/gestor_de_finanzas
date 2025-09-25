@@ -1,3 +1,5 @@
+import { isValidElement } from "react";
+
 export async function apiGet(url) {
     try {
         const req = await fetch(url, {
@@ -11,9 +13,17 @@ export async function apiGet(url) {
         console.error(error);
     }
 }
-export async function apiPost(url, form, method = 'POST') {
+export async function apiPost(url, form = false, method = 'POST', dats = {}) {
     try {
-        const data = new FormData(form);
+        let data;
+        if(form) {
+            data = new FormData(form);
+        } else {
+            data = dats;
+        }
+        if(method !== 'POST') {
+            data.append('_method', method);
+        }
         const req = await fetch(url, {
             method: 'POST',
             body: data

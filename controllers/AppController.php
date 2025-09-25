@@ -6,6 +6,6 @@ use MVC\Router;
 
 class AppController {
     static public function index(Router $r) : void {
-        $r->render('index');
+        $r->render('app/index');
     }
 }

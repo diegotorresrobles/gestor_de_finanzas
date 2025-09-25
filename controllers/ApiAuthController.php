@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Classes\Email;
+use Models\Cuentas;
 use Models\Users;
 
 class ApiAuthController {

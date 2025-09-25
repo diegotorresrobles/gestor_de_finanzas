@@ -1,6 +1,8 @@
 <?php
 
 use Controllers\ApiAuthController;
+use Controllers\ApiCuentasController;
+use Controllers\ApiMovimientosController;
 use Controllers\AppController;
 use Controllers\AuthController;
 use MVC\Router;
@@ -22,5 +24,11 @@ $router->get('/api/account-verify', [ApiAuthController::class, 'verificar']);
 $router->post('/api/account-verify', [ApiAuthController::class, 'verificar']);
 
 $router->get('/logout', [AuthController::class, 'logout']);
+
+$router->get('/api/cuentas', [ApiCuentasController::class, 'cuentas']);
+$router->post('/api/cuentas', [ApiCuentasController::class, 'cuentas']);
+
+$router->get('/api/movimientos', [ApiMovimientosController::class, 'movimientos']);
+$router->post('/api/movimientos', [ApiMovimientosController::class, 'movimientos']);
 
 $router->validarRutas();

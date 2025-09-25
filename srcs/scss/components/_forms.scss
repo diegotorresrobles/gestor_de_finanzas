@@ -52,7 +52,6 @@
         &:not(&:placeholder-shown) ~ .form__label {
             top: -.8rem;
             --input-border-color: var(--border-sec);
-            background-color: var(--bg);
             color: var(--border-sec);
             padding: 0 .5rem;
             font-size: 1.4rem;
@@ -72,6 +71,12 @@
         cursor: pointer;
         cursor: text;
         transition: calc(var(--transition) - .1s) ease-in;
+        background-color: var(--bg);
+
+        &:has(~ select) {
+            position: relative;
+            display: block;
+        }
     }
     &__submit {
         display: block;
@@ -81,5 +86,14 @@
     &__link {
         display: block;
         margin-top: 2rem;
+    }
+}
+
+.modal .form {
+    &__input {
+        background-color: var(--modal-bg);
+    }
+    &__label {
+        background-color: var(--modal-bg);
     }
 }

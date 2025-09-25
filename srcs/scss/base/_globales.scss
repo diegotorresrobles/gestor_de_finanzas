@@ -24,11 +24,11 @@ body {
     color: var(--text-color);
     min-height: 100vh;
 
-    &.app {
-        @include m.mq(1000px) {
-            padding-left: 25rem;
-        }
-    }
+    // &.app {
+    //     @include m.mq(1000px) {
+    //         padding-left: 25rem;
+    //     }
+    // }
 }
 
 body:has(.overlay) {

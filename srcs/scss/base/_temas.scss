@@ -1,6 +1,0 @@
-@use 'base/variables' as v;
-@use 'base/mixins' as m;
-
-@each $theme, $map in v.$themes {
-    @include m.theme($theme, $map);
-}

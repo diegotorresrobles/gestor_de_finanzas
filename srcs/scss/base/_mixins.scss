@@ -1,0 +1,38 @@
+@use 'base/variables' as v;
+
+@mixin css-vars($map) {
+    @each $var, $val in $map {
+        --#{$var}: #{$val};
+    }
+}
+
+@mixin theme($name, $map) {
+    body.#{$name} {
+        @each $var, $val in $map {
+        --#{$var}: #{$val};
+        }
+    }
+}
+
+@mixin mq($t) {
+    @media screen and (min-width: $t) {
+        @content;
+    }
+}
+
+@mixin btn($bg: v.$color-1, $color: v.$blanco) {
+    display: block;
+    padding: 1rem 3rem;
+    background-color: $bg;
+    color: $color;
+    border: 0;
+    outline: none;
+    border-radius: .8rem; 
+    cursor: pointer;
+    font-weight: 500;
+    transition: transform .3s ease-in-out;
+
+    &:hover {
+        transform: translateY(-.2rem);
+    }
+}

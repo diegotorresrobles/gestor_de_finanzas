@@ -11,53 +11,16 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add" />
 </head>
 <?php
-    $auth = $_SESSION['login'] ?? false;
+    $auth = $_SESSION['auth'] ?? false;
     $url = $_SERVER['PATH_INFO'] ?? '/';
 ?>
-<body class="ligth <?php if($auth && $url !== '/') echo 'app'; ?>">
-    <?php if($auth && $url !== '/'): ?>
-        <aside class="aside">
-            <div class="aside__header">
-                <a href="/app" class="aside__logo--link">
-                    <h1 class="aside__logo">Gestor de Finanzas</h1>
-                </a>
-                <div class="aside__menu-btn">
-                    <div class="aside__menu-btn--line-1"></div>
-                    <div class="aside__menu-btn--line-2"></div>
-                </div>
-            </div>
-            <div class="aside__contenido">
-                <ul class="aside__dropdown-contenedor">
-                    <li class="aside__dropdown">
-                        <button type="button" class="aside__btn">Tus cuentas</button>
-                        <ul class="aside__dropdown-contenedor">
-                            <li class="aside__dropdown">
-                                <a href="/cuentas" class="aside__btn aside__btn--link">Ver</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="aside__dropdown">
-                        <button type="button" class="aside__btn">Movimientos</button>
-                        <ul class="aside__dropdown-contenedor">
-                            <li class="aside__dropdown">
-                                <a href="/movimientos" class="aside__btn aside__btn--link">Ver</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <div class="aside__line"></div>
-                    <li class="aside__dropdown">
-                        <button type="button" class="aside__btn">Cuenta</button>
-                        <ul class="aside__dropdown-contenedor">
-                            <li class="aside__dropdown">
-                                <a href="/profile" class="aside__btn aside__btn--link">Perfil</a>
-                                <a href="/logout" class="aside__btn aside__btn--link">Cerrar sesión</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </aside>
-    <?php endif; ?>
+<body <?php if ($auth) echo 'class="app"' ?>>
+    <header class="header">
+        <input type="checkbox" name="theme" id="theme" class="header__theme-btn">
+        <?php if ($auth): ?>
+            <a href="/logout" class="header__link">Cerrar Sesión <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-logout"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" /><path d="M9 12h12l-3 -3" /><path d="M18 15l3 -3" /></svg></a>
+        <?php endif; ?>
+    </header>
     <?php echo $contenido; ?>
     <!-- Scripts -->
     <script type="module" src="/build/js/bundle.js"></script>

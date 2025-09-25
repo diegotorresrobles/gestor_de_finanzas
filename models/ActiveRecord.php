@@ -5,7 +5,7 @@ class ActiveRecord {
     protected static $db;
     protected static $columnasDB = [];
     protected static $tabla = '';
-    protected static $errores = [];
+    protected static $alertas = [];
 
     public static function setDB($db) {
         self::$db = $db;
@@ -46,7 +46,7 @@ class ActiveRecord {
         return $resultado;
     }
     public function eliminar($id) {
-        $query = "DELETE FROM " . static::$tabla . " WHERE id = '${id}'";
+        $query = "DELETE FROM " . static::$tabla . " WHERE id = '{$id}'";
 
         $resultado = self::$db->query($query);
         return $resultado;
@@ -108,6 +108,10 @@ class ActiveRecord {
         $r = self::consultaSQL($q);
         return array_shift($r);
     }
+    public static function query($q) {
+        $r = self::consultaSQL($q);
+        return array_shift($r);
+    }
     public static function where($config = []) {
         // Defaults
         $defaults = [
@@ -163,11 +167,11 @@ class ActiveRecord {
         return $r;
     }
     //* Set
-    public static function setError($error, $errorTexto) {
-        static::$errores[$error] = $errorTexto;
+    public static function setAlerta($alerta, $txt) {
+        static::$alertas[$alerta] = $txt;
     }
     //* Get
-    public static function getErrores() {
-        return static::$errores;
+    public static function getAlertas() {
+        return static::$alertas;
     }
 }

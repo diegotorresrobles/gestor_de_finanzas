@@ -23,12 +23,15 @@ class Router {
             'samesite' => 'Strict'
         ]);
         session_start();
-        $auth = $_SESSION['login'] ?? false;
+        $auth = $_SESSION['auth'] ?? false;
         $urlActual = $_SERVER['PATH_INFO'] ?? '/';
         $metodo = $_SERVER['REQUEST_METHOD'];
-        $urlsProtegidas = ['/app', '/profile'];
+        $urlsProtegidas = ['/', '/api/cuentas', '/api/movimientos'];
         if(in_array($urlActual, $urlsProtegidas) && !$auth) {
-            header('Location: /401');
+            header('Location: /login');
+        }
+        if(!in_array($urlActual, $urlsProtegidas) && $auth) {
+            header('Location: /');
         }
         if($metodo === 'GET') {
             $fn = $this->rutasGET[$urlActual] ?? null;

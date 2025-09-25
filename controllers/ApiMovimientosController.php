@@ -3,180 +3,156 @@
 namespace Controllers;
 
 use Models\Cuentas;
-use Models\Movimientos;
-use Models\TiposMovimientos;
+use Models\Moviminetos;
 
 class ApiMovimientosController {
-    static public function index() {
-        $id_user = $_SESSION['id_user'] ?? null;
-        $metodo = $_SERVER['REQUEST_METHOD'];
-        $postMethod = $_POST['_method'] ?? null;
-        if($metodo === 'GET') {
-            $id = $_GET['id'] ?? null;
-            if(!$id) {
-                $movimientos = Movimientos::where([
-                    'columnas' => '*',
-                    'where' => ['id_user' => $id_user],
-                    'order' => 'id DESC',
-                    'cursor_col' => 'id',
-                    'limite' => 20
+    static public function movimientos() : void {
+        $method = $_POST['_method'] ?? false;
+        if($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $id_user = $_SESSION['id'];
+            $movimientos = Moviminetos::where([
+                'columnas' => '*',
+                'where' => [
+                    'id_user' => $id_user
+                ],
+                'limite' => 100
+            ]);
+            if(!$movimientos) {
+                jsonRes([
+                    'status' => 'error',
+                    'message' => 'No hay registros'
                 ]);
-                if(!$movimientos) {
-                    echo json_encode([
-                        'status' => 'error',
-                        'message' => 'No se encontro el registro'
-                    ]);
-                } else {
-                    http_response_code(200);
-                    echo json_encode([
-                        'status' => 'ok',
-                        'message' => '',
-                        'movimientos' => $movimientos
-                    ]);
-                }
             } else {
-                $movimientos = Movimientos::where([
-                    'columnas' => '*',
-                    'where' => ['id' => $id],
-                    'limite' => 1
+                jsonRes([
+                    'status' => 'success',
+                    'message' => 'Movimientos: ',
+                    'data' => $movimientos
                 ]);
-                if(!$movimientos) {
-                    http_response_code(200);
-                    echo json_encode([
-                        'status' => 'error',
-                        'message' => 'No se encontro el registro',
-                        'movimientos' => null
-                    ]);
+            }
+        }
+        if($_SERVER['REQUEST_METHOD'] === 'POST' && !$method) {
+            $id_user = $_SESSION['id'];
+            $movimiento = new Moviminetos($_POST);
+            $movimiento->id_user = $id_user;
+
+            $cuenta = Cuentas::where([
+                'columnas' => '*',
+                'limite' => 1,
+                'where' => [
+                    'id_user' => $id_user
+                ]
+            ]);
+
+            $movimiento->cuenta = $cuenta->id;
+            $alertas = $movimiento->validarDatosNew();
+            if(!empty($alertas)) {
+                jsonRes([
+                    'status' => 'error',
+                    'message' => 'Verificar datos',
+                    'data' => [
+                        'alertas' => $alertas
+                    ]
+                ]);
+            } else {
+                $movimiento->calcularSaldoNuevo($cuenta);
+                $r = $movimiento->guardar();
+                if(!$r) {
+
                 } else {
-                    if($movimientos->id_user !== $id_user) {
-                        echo json_encode([
-                            'status' => 'error',
-                            'message' => 'No se encontro el registro'
-                        ]);
-                    } else {
-                        http_response_code(200);
-                        echo json_encode([
-                            'status' => 'ok',
-                            'message' => '',
-                            'movimientos' => $movimientos
-                        ]);
-                    }
+                    jsonRes([
+                        'status' => 'success',
+                        'message' => 'Movimiento creado',
+                        'data' => [
+                            'alertas' => [
+                                'exito' => 'Movimiento creado correctamente'
+                            ]
+                        ]
+                    ]);
                 }
             }
         }
-        if ($metodo === 'POST' && !$postMethod) {
-            $movimiento = new Movimientos($_POST);
-            $errores = $movimiento->validarNew();
-            if (!empty($errores)) {
-                echo json_encode([
+        if($_SERVER['REQUEST_METHOD'] === 'POST' && $method === 'PUT') {
+            $id_user = $_SESSION['id'];
+            $cuenta = Cuentas::where([
+                'columnas' => '*',
+                'limite' => 1,
+                'where' => [
+                    'id_user' => $id_user,
+                    'id' => $_POST['id']
+                ]
+            ]);
+            if(!$cuenta) {
+                jsonRes([
                     'status' => 'error',
-                    'message' => '',
-                    'errors' => $errores
+                    'message' => 'No se encontro el registro',
+                    'data' => [
+                        'alertas' => [
+                            'error' => 'No se encontro el registro'
+                        ]
+                    ]
+                ]);
+            } else {
+                $cuenta->sincronizar($_POST);
+                $r = $cuenta->guardar();
+                if(!$r) {
+
+                } else {
+                    jsonRes([
+                    'status' => 'success',
+                    'message' => 'Cuenta actualizada',
+                    'data' => [
+                        'alertas' => [
+                            'exito' => 'Cuenta actualizada correctamente'
+                        ]
+                    ]
+                ]);
+                }
+            }
+        }
+        if($_SERVER['REQUEST_METHOD'] === 'POST' && $method === 'DELETE') {
+            $id_user = $_SESSION['id'];
+            $movimiento = Moviminetos::where([
+                'columnas' => '*',
+                'limite' => 1,
+                'where' => [
+                    'id_user' => $id_user,
+                    'id' => $_POST['id']
+                ]
+            ]);
+            if(!$movimiento) {
+                jsonRes([
+                    'status' => 'error',
+                    'message' => 'No se encontro el registro',
+                    'data' => [
+                        'alertas' => [
+                            'error' => 'No se encontro el registro'
+                        ]
+                    ]
                 ]);
             } else {
                 $cuenta = Cuentas::where([
                     'columnas' => '*',
-                    'where' => ['id' => $movimiento->cuenta],
-                    'limite' => 1
+                    'limite' => 1,
+                    'where' => [
+                        'id_user' => $id_user
+                    ]
                 ]);
-                $tipoMovimiento = TiposMovimientos::where([
-                    'columnas' => '*',
-                    'where' => ['id' => $movimiento->tipo],
-                    'limite' => 1
-                ]);
-                if(strtolower($tipoMovimiento->nombre) === 'ingreso') {
-                    $cuenta->saldo_actual = $cuenta->saldo_actual + $movimiento->monto;
+                
+                $movimiento->calcularSaldoNuevoDel($cuenta);
+                $r = $movimiento->eliminar($movimiento->id);
+                if(!$r) {
+
                 } else {
-                    $cuenta->saldo_actual = $cuenta->saldo_actual - $movimiento->monto;
+                    jsonRes([
+                    'status' => 'success',
+                    'message' => 'Movimiento eliminado',
+                    'data' => [
+                        'alertas' => [
+                            'exito' => 'Movimiento eliminado correctamente'
+                        ]
+                    ]
+                ]);
                 }
-                $r = $movimiento->guardar();
-                if (!$r) {
-                    echo json_encode([
-                        'status' => 'error',
-                        'message' => 'Error al registrar el movimiento'
-                    ]);
-                } else {
-                    $r = $cuenta->guardar();
-                    if(!$r) {
-                        echo json_encode([
-                            'status' => 'error',
-                            'message' => 'Error al actualizar la cuenta'
-                        ]);
-                    } else {
-                        http_response_code(200);
-                        echo json_encode([
-                            'status' => 'ok',
-                            'message' => 'Movimiento agregado correctamente'
-                        ]);
-                    }
-                }
-            }
-        } else if ($postMethod === 'PUT') {
-            $movimiento = Movimientos::where([
-                'where' => ['id' => $_POST['id']],
-                'limite' => 1
-            ]);
-            $cuenta = Cuentas::where([
-                'columnas' => '*',
-                'where' => ['id' => $movimiento->cuenta],
-                'limite' => 1
-            ]);
-            $tipoMovimiento = TiposMovimientos::where([
-                'columnas' => '*',
-                'where' => ['id' => $movimiento->tipo],
-                'limite' => 1
-            ]);
-            if(strtolower($tipoMovimiento->nombre) === 'ingreso') {
-                $cuenta->saldo_actual = $cuenta->saldo_actual - $movimiento->monto;
-            } else {
-                $cuenta->saldo_actual = $cuenta->saldo_actual + $movimiento->monto;
-            }
-            $movimiento->sincronizar($_POST);
-            $tipoMovimiento = TiposMovimientos::where([
-                'columnas' => '*',
-                'where' => ['id' => $movimiento->tipo],
-                'limite' => 1
-            ]);
-            if(strtolower($tipoMovimiento->nombre) === 'ingreso') {
-                $cuenta->saldo_actual = $cuenta->saldo_actual + $movimiento->monto;
-            } else {
-                $cuenta->saldo_actual = $cuenta->saldo_actual - $movimiento->monto;
-            }
-            $r = $movimiento->guardar();
-            $cuenta->guardar();
-            if(!$r) {
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => 'Error al actualizar el movimiento'
-                ]);
-            } else {
-                http_response_code(200);
-                echo json_encode([
-                    'status' => 'ok',
-                    'message' => 'Movimiento actualizado correctamente'
-                ]);
-            }
-        }
-    }
-    static public function tipos() {
-        $id_user = $_SESSION['id_user'] ?? null;
-        $metodo = $_SERVER['REQUEST_METHOD'];
-        if($metodo === 'GET') {
-            $tipos_movimientos = TiposMovimientos::getAll();
-            if(!$tipos_movimientos) {
-                http_response_code(200);
-                echo json_encode([
-                    'status' => 'ok',
-                    'message' => '',
-                    'tipos_movimientos' => null
-                ]);
-            } else {
-                http_response_code(200);
-                echo json_encode([
-                    'status' => 'ok',
-                    'message' => '',
-                    'tipos_movimientos' => $tipos_movimientos
-                ]);
             }
         }
     }

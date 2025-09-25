@@ -1,179 +1,122 @@
 <?php
-
 namespace Models;
 
 class Users extends ActiveRecord {
-    public static $tabla = 'users';
-    public static $columnasDB = ['id', 'nombre', 'apellido', 'email', 'telefono', 'username', 'password', 'fecha_registro', 'token'];
-    public static $errores = [];
+    protected static $columnasDB = ['id', 'nombre', 'apellido', 'email', 'telefono', 'username', 'password', 'fecha_registro', 'token', 'confirmado'];
+    protected static $tabla = 'users';
+    protected static $alertas = [];
 
     public $id;
-    public $username;
-    public $password;
     public $nombre;
     public $apellido;
     public $email;
     public $telefono;
+    public $username;
+    public $password;
     public $fecha_registro;
     public $token;
+    public $confirmado;
 
-    public function __construct($args = [])
-    {
-        $this->id = $args['id'] ?? '';
-        $this->nombre = $args['nombre'] ?? '';
-        $this->apellido = $args['apellido'] ?? '';
-        $this->email = $args['email'] ?? '';
-        $this->telefono = $args['telefono'] ?? '';
-        $this->username = $args['username'] ?? '';
-        $this->password = $args['password'] ?? '';
-        $this->fecha_registro = date('Y-m-d H:s:m');
+    public function __construct($datos = []) {
+        $this->id = $datos['id'] ?? null;
+        $this->nombre = $datos['nombre'] ?? '';
+        $this->apellido = $datos['apellido'] ?? '';
+        $this->email = $datos['email'] ?? '';
+        $this->telefono = $datos['telefono'] ?? '';
+        $this->username = $datos['username'] ?? '';
+        $this->password = $datos['password'] ?? '';
+        $this->fecha_registro = $datos['fecha_registro'] ?? date('Y-m-d H:s:m');
+        $this->token = $datos['token'] ?? uniqid();
+        $this->confirmado = $datos['confirmado'] ?? 0;
     }
-    // Validaciones
-    public function validarLogup() {
-        if (!$this->nombre) {
-            self::$errores['nombre'] = 'El campo no puede ir vacio.';
-        }
-        if (!$this->apellido) {
-            self::$errores['apellido'] = 'El campo no puede ir vacio.';
-        }
-        if (!$this->email) {
-            self::$errores['email'] = 'El campo no puede ir vacio.';
+
+    public function validarDatosLogup() {
+        if (!$this->nombre || !$this->apellido || !$this->email || !$this->telefono || !$this->username || !$this->password) {
+            self::$alertas['error']['campos'] = 'Verifica que el formulario este completo';
         }
         if ($this->email) {
-            if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-                self::$errores['email'] = 'El correo no es valido.';
+            $regex = '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
+            if (!preg_match($regex, $this->email)) {
+                self::$alertas['error']['email'] = 'El email no es valido';
             }
         }
-        if ($this->email && filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-            $userExist = self::where([
-                'columnas' => 'email',
-                'where' => ['email' => $this->email],
-                'limite' => 1
-            ]);
-            if ($userExist) {
-                self::$errores['email'] = 'El correo ya esta registrado, elige otro.';
+        if ($this->telefono) {
+            $regex = '/^\d{10}$/';
+            if (!preg_match($regex, $this->telefono)) {
+                self::$alertas['error']['telefono'] = 'El teléfono no es valido';
             }
-        }
-        if (!$this->telefono) {
-            self::$errores['telefono'] = 'El campo no puede ir vacio.';
-        }
-        if (!$this->username) {
-            self::$errores['username'] = 'El campo no puede ir vacio.';
-        }
-        if ($this->username && strpos($this->username, ' ')) {
-            self::$errores['username'] = 'El nombre de usuario no puede contener espacios';
         }
         if ($this->username) {
-            $userExist = self::where([
-                'columnas' => 'username',
-                'where' => ['username' => $this->username],
-                'limite' => 1
-            ]);
-            if ($userExist) {
-                self::$errores['username'] = 'El nombre de usuario ya esta en uso, elige otro.';
+            $regex = '/^[a-zA-Z0-9_-]{3,16}$/';
+            if (!preg_match($regex, $this->username)) {
+                self::$alertas['error']['username'] = 'El username no es valido';
             }
-        }
-        if (!$this->password) {
-            self::$errores['password'] = 'El campo no puede ir vacio.';
         }
         if ($this->password) {
-            $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])\S{8,64}$/';
+            $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?.&])[A-Za-z\d@$!%*?.&]{8,}$/';
             if (!preg_match($regex, $this->password)) {
-                self::$errores['password'] = 'La cantraseña debe tener de 8 a 64 caracteres y al menos: 1 minúscula, 1 mayúscula, 1 dígito y 1 símbolo.';
+                self::$alertas['error']['password'] = 'La contraseña no es valida';
             }
         }
-        return self::$errores;
+        if ($this->password && $_POST['password-confirm'] && $this->password !== $_POST['password-confirm']) {
+            self::$alertas['error']['password'] = 'Las contraseñas no coinciden';
+        }
+        return self::$alertas;
     }
-    public function validarLogin() {
-        if (!$this->username) {
-            self::$errores['username'] = 'El campo es obligatorio.';
-        }
-        if (!$this->password) {
-            self::$errores['password'] = 'El campo es obligatorio.';
-        }
-        if ($this->username && $this->password) {
-            $user = self::where([
-                'columnas' => 'id, username, password',
-                'where' => ['username' => $this->username],
-                'limite' => 1
-            ]);
-            if (!$user || !password_verify($this->password, $user->password)) {
-                self::$errores['username'] =  'El usuario o contraseña son incorrectos.'; 
-            } else {
-                $this->id = $user->id;
+    public function verificarDatos() {
+        $q = "SELECT email, telefono, username FROM " . self::$tabla . " WHERE email = '" . self::$db->escape_string($this->email) . "' OR telefono = '" . self::$db->escape_string($this->telefono) ."' OR username = '" . self::$db->escape_string($this->username) . "'";
+        $user = self::query($q);
+        if($user) {
+            if($user->email === $this->email) {
+                self::$alertas['error']['email'] = 'El email ya esta registrado';
+            }
+            if($user->telefono === $this->telefono) {
+                self::$alertas['error']['telefono'] = 'El teléfono ya esta registrado';
+            }
+            if($user->username === $this->username) {
+                self::$alertas['error']['username'] = 'El username ya esta registrado';
             }
         }
-        return self::$errores;
+        return self::$alertas;
     }
-    public function validarUpdate($id_user) {
-        $user = $this->where([
-            'columnas' => 'id, email, username',
-            'where' => ['id' => $id_user],
-            'limite' => 1
-        ]) ?? null;
-        if (!$this->nombre) {
-            self::$errores['nombre'] = 'El campo no puede ir vacio.';
+    public function validarDatosLogin() {
+        if(!$this->username) {
+            self::$alertas['error']['username'] = 'El campo no debe ir vacio';
         }
-        if (!$this->apellido) {
-            self::$errores['apellido'] = 'El campo no puede ir vacio.';
+        if(!$this->password) {
+            self::$alertas['error']['password'] = 'El campo no debe ir vacio';
         }
-        if (!$this->email) {
-            self::$errores['email'] = 'El campo no puede ir vacio.';
-        }
-        if ($this->email) {
-            if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-                self::$errores['email'] = 'El correo no es valido.';
-            }
-        }
-        if ($this->email && filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-            $userExist = self::where([
-                'columnas' => 'email',
-                'where' => ['email' => $this->email],
-                'limite' => 1
-            ]);
-            if ($userExist && $userExist->email !== $user->email) {
-                self::$errores['email'] = 'El correo ya esta registrado, elige otro.';
-            }
-        }
-        if (!$this->telefono) {
-            self::$errores['telefono'] = 'El campo no puede ir vacio.';
-        }
-        if (!$this->username) {
-            self::$errores['username'] = 'El campo no puede ir vacio.';
-        }
-        if ($this->username && strpos($this->username, ' ')) {
-            self::$errores['username'] = 'El nombre de usuario no puede contener espacios';
-        }
-        if ($this->username) {
-            $userExist = self::where([
-                'columnas' => 'username',
-                'where' => ['username' => $this->username],
-                'limite' => 1
-            ]);
-            if ($userExist && $userExist->username !== $user->username) {
-                self::$errores['username'] = 'El nombre de usuario ya esta en uso, elige otro.';
-            }
-        }
-        if (!$this->password) {
-            self::$errores['password'] = 'El campo no puede ir vacio.';
-        }
-        if ($this->password) {
-            $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])\S{8,64}$/';
-            if (!preg_match($regex, $this->password)) {
-                self::$errores['password'] = 'La cantraseña debe tener de 8 a 64 caracteres y al menos: 1 minúscula, 1 mayúscula, 1 dígito y 1 símbolo.';
-            }
-        }
-        return self::$errores;
+        return self::$alertas;
     }
-    // Funciones
-    public function setToken() {
-        $this->token = uniqid();
+    public function verificarDatosLogin() {
+        $user = self::where([
+            'columnas' => '*',
+            'limite' => 1,
+            'where' => [
+                'username' => $this->username
+            ] 
+        ]);
+        if(!$user || !password_verify($this->password, $user->password)) {
+            self::$alertas['error']['username'] = 'El usuario o la contraseña son incorrectos';
+        }
+        if($user->confirmado === '0') {
+            self::$alertas['error']['username'] = 'La cuenta no ha sido confirmada';
+        }
+        if(empty(self::$alertas)) {
+            $user->crearSesion();
+        }
+        return self::$alertas;
     }
     public function hashPassword() {
         $this->password = password_hash($this->password, PASSWORD_DEFAULT);
     }
-    public static function crearSession($id) {
-        $_SESSION['login'] = true;
-        $_SESSION['id_user'] = $id;
+    public function crearSesion($new = false) {
+        session_regenerate_id(true);
+        $_SESSION['auth'] = true;
+        $_SESSION['login_time'] = time();
+        $_SESSION['id'] = $this->id;
+        if ($new) {
+            $_SESSION['new-account'] = true;
+        }
     }
 }

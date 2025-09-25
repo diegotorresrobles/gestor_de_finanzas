@@ -1,17 +1,15 @@
-<form method="post" class="form form--login">
-    <div class="contenedor form__contenedor">
+<div action="/api/login" class="form__contenedor">
+    <form method="post" class="form form--login" autocomplete="off">
         <h1 class="form__name">Iniciar Sesión</h1>
-        <div class="form__campos">
-            <div class="form__campo">
-                <label for="username" class="form__label">Usuario</label>
-                <input type="text" name="username" id="username" autocapitalize="off" class="form__input">
-            </div>
-            <div class="form__campo">
-                <label for="password" class="form__label">Contraseña</label>
-                <input type="password" name="password" id="password" autocapitalize="off" class="form__input">
-            </div>
+        <div class="form__campo">
+            <input type="text" name="username" id="username" placeholder="." class="form__input">
+            <label for="username" class="form__label">Username</label>
         </div>
-        <button class="form__submit">Iniciar Sesión</button>
+        <div class="form__campo">
+            <input type="password" name="password" id="password" placeholder="." class="form__input">
+            <label for="password" class="form__label">Contraseña</label>
+        </div>
+        <button type="submit" class="form__submit btn">Ingresar</button>
         <a href="/logup" class="form__link">No tienes una cuenta? Crea una</a>
-    </div>
-</form>
+    </form>
+</div>

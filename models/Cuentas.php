@@ -1,11 +1,10 @@
 <?php
-
 namespace Models;
 
 class Cuentas extends ActiveRecord {
-    public static $tabla = 'cuentas';
-    public static $columnasDB = ['id', 'id_user', 'nombre', 'tipo', 'saldo_actual'];
-    public static $errores = [];
+    protected static $columnasDB = ['id', 'id_user', 'nombre', 'tipo', 'saldo_actual'];
+    protected static $tabla = 'cuentas';
+    protected static $alertas = [];
 
     public $id;
     public $id_user;
@@ -13,17 +12,30 @@ class Cuentas extends ActiveRecord {
     public $tipo;
     public $saldo_actual;
 
-    public function __construct($args = [])
-    {
-        $this->id = $args['id'] ?? '';
-        $this->id_user = $args['id_user'] ?? '';
-        $this->nombre = $args['nombre'] ?? '';
-        $this->tipo = $args['tipo'] ?? 1;
-        $this->saldo_actual = $args['saldo_actual'] ?? 0;
+    public function __construct($datos = []) {
+        $this->id = $datos['id'] ?? null;
+        $this->id_user = $datos['id_user'] ?? '';
+        $this->nombre = $datos['nombre'] ?? '';
+        $this->tipo = $datos['tipo'] ?? '';
+        $this->saldo_actual = $datos['saldo_actual'] ?? 0;
     }
-    public function crearCuentaInicial($id) {
-        $this->id_user = $id;
-        $this->nombre = 'Efectivo';
-        $this->guardar();
+
+    public function validarDatosNew() {
+        if(!$this->nombre) {
+            self::$alertas['error']['nombre'] = 'El campo es necesario';
+        }
+        if(!$this->tipo) {
+            self::$alertas['error']['tipo'] = 'El campo es necesario';
+        }
+        return self::$alertas;
+    }
+    public function validarDatosUpdate() {
+        if(!$this->nombre) {
+            self::$alertas['error']['nombre'] = 'El campo es necesario';
+        }
+        if(!$this->tipo) {
+            self::$alertas['error']['tipo'] = 'El campo es necesario';
+        }
+        return self::$alertas;
     }
 }

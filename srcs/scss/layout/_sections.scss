@@ -1,0 +1,42 @@
+@use 'base/mixins' as m;
+
+main {
+    @include m.mq(768px) {
+        display: grid;
+        grid-template-columns: 3fr 5fr;
+        gap: 2rem;
+        height: calc(100vh - 7.5rem);
+    }
+}
+
+.section {
+    width: 100%;
+    background-color: var(--section-bg);
+    padding: 1rem;
+    border-radius: var(--radius);
+    margin-bottom:  2rem;
+
+    @include m.mq(768px) {
+        margin: 0;
+    }
+    &:last-child {
+        margin-bottom: 0;
+    }
+    
+    &__name {
+        margin: 0;
+        margin-bottom: 2rem;
+    }
+    &--cuentas {
+        grid-column: 1 / 2;
+        height: 100%;
+    }
+    &--movimientos {
+        grid-column: 2 / 3;
+        height: max-content;
+
+        .movimientos__agregar {
+            margin-bottom: 2rem;
+        }
+    }
+}
